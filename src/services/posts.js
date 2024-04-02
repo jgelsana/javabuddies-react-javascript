@@ -1,41 +1,76 @@
 import { posts as data } from "../data/posts";
+import { generateId } from "../utils";
 
-//private
 let posts = [...data];
 
 function getPosts() {
-  //get all posts
+  return posts;
 }
 
 function getPostsByUser(userId) {
-  //get all posts by userId
+  return posts.filter(post => post.userId === userId);
 }
 
 function getPostById(id) {
-  //get a single post by id
+  return posts.find(post => post.id === id);
 }
 
 function addPost(post) {
-  //add new post to BEGINNING of posts array
-  // use generateId function and pass posts array as the argument to generate a unique id.
+  const newPost = {
+    id: generateId(posts),
+    ...post
+  };
+  posts.unshift(newPost);
+  return newPost;
 }
 
 function updatePostTitle(id, title) {
-  //update post title
+  const postToUpdate = posts.find(post => post.id === id);
+  if (postToUpdate) {
+    postToUpdate.title = title;
+    return postToUpdate;
+  } else {
+    return null;
+  }
 }
 
 function updatePostBody(id, body) {
-  //update post body
+  const postToUpdate = posts.find(post => post.id === id);
+  if (postToUpdate) {
+    postToUpdate.body = body;
+    return postToUpdate;
+  } else {
+    return null;
+  }
 }
 
-function updatePost(id, post) {
-  //update post title and or body (imagine a form where user is allowed to edit both title and post but may also choose to only edit one of them)
+function updatePost(id, updatedPost) {
+  const postToUpdate = posts.find(post => post.id === id);
+  if (postToUpdate) {
+    if (updatedPost.title) {
+      postToUpdate.title = updatedPost.title;
+    }
+    if (updatedPost.body) {
+      postToUpdate.body = updatedPost.body;
+    }
+    return postToUpdate;
+  } else {
+    return null;
+  }
 }
 
 function deletePostBy(id) {
-  //delete post by id
+  const index = posts.findIndex(post => post.id === id);
+  if (index !== -1) {
+    posts.splice(index, 1);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function deletePostsByUserId(userId) {
-  //delete all posts of a user by given userId
+  const initialLength = posts.length;
+  posts = posts.filter(post => post.userId !== userId);
+  return initialLength !== posts.length;
 }
